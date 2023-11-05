@@ -1,45 +1,19 @@
 import Footer from '@/components/Footer';
-import {login} from '@/services/ant-design-pro/api';
-import {getFakeCaptcha} from '@/services/ant-design-pro/login';
-import {
-  LockOutlined,
-  MobileOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import {useEmotionCss} from '@ant-design/use-emotion-css';
-import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, message, Tabs} from 'antd';
-import React, {useEffect, useState} from 'react';
-import {flushSync} from 'react-dom';
+import { getLoginUserVOUsingGET, loginUsingPOST } from '@/services/congmingya/userController';
+import { Link } from '@@/exports';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
+import { Helmet, history, useModel } from '@umijs/max';
+import { Alert, message, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-import {getLoginUserVOUsingGET, loginUsingPOST} from "@/services/congmingya/userController";
-import {Link} from "@@/exports";
 
-const Lang = () => {
-  const langClassName = useEmotionCss(({token}) => {
-    return {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-  return;
-};
+// @ts-ignore
 const LoginMessage: React.FC<{
   content: string;
-}> = ({content}) => {
+}> = ({ content }) => {
   return (
     <Alert
       style={{
@@ -53,7 +27,8 @@ const LoginMessage: React.FC<{
 };
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const {initialState, setInitialState} = useModel('@@initialState');
+  // @ts-ignore
+  const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -82,7 +57,7 @@ const Login: React.FC = () => {
         // @ts-ignore
         setInitialState((s) => ({
           ...s,
-          currentUser: userInfo,
+          currentUser: userInfo.data,
         }));
       });
     }
@@ -99,16 +74,15 @@ const Login: React.FC = () => {
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
-      } else {
-        message.error(res.message);
       }
-      // console.log(res);
+      // console.log("res:", res);
       // // 如果失败去设置用户错误信息
       // setUserLoginState(res);
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
+      // const defaultLoginFailureMessage = '登录失败，请重试！';
       console.log(error);
-      message.error(defaultLoginFailureMessage);
+      // @ts-ignore
+      message.error(error.response.data.message);
     }
   };
 
@@ -119,7 +93,6 @@ const Login: React.FC = () => {
           {'登录'}- {Settings.title}
         </title>
       </Helmet>
-      {/*<Lang />*/}
       <div
         style={{
           flex: '1',
@@ -131,7 +104,7 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/congmingyaya.jpg" height={50}/>}
+          logo={<img alt="logo" src="/logo.svg" height={50} />}
           title="聪明鸭AI助手"
           subTitle={'聪明鸭 — 做您最聪明的AI助手'}
           initialValues={{
@@ -149,7 +122,7 @@ const Login: React.FC = () => {
               {
                 key: 'account',
                 label: '账户密码登录',
-              }
+              },
             ]}
           />
 
@@ -159,26 +132,26 @@ const Login: React.FC = () => {
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined/>,
+                  prefix: <UserOutlined />,
                 }}
                 placeholder={'请输入用户名'}
                 rules={[
                   {
                     required: true,
-                    message: '用户名是必填项！'
+                    message: '用户名是必填项！',
                   },
                   {
                     min: 4,
                     max: 20,
-                    message: "用户账号长度为4~20位"
-                  }
+                    message: '用户账号长度为4~20位',
+                  },
                 ]}
               />
               <ProFormText.Password
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined/>,
+                  prefix: <LockOutlined />,
                 }}
                 placeholder={'请输入密码'}
                 rules={[
@@ -188,8 +161,8 @@ const Login: React.FC = () => {
                   },
                   {
                     min: 8,
-                    message: "密码至少8位"
-                  }
+                    message: '密码至少8位',
+                  },
                 ]}
               />
             </>
@@ -209,11 +182,11 @@ const Login: React.FC = () => {
             >
               忘记密码 ?
             </a>
-            <Link to="/user/register">注册</Link>
+            <Link to="/user/register">没有账号？去注册</Link>
           </div>
         </LoginForm>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
