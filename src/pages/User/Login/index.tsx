@@ -27,7 +27,6 @@ const LoginMessage: React.FC<{
 };
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  // @ts-ignore
   const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
