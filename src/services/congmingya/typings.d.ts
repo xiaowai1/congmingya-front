@@ -41,6 +41,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageUserVO_ = {
+    code?: number;
+    data?: PageUserVO_;
+    message?: string;
+  };
+
   type BaseResponseUser_ = {
     code?: number;
     data?: User;
@@ -141,6 +147,19 @@ declare namespace API {
     total?: number;
   };
 
+  type PageUserVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: UserVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
   type User = {
     accessKey?: string;
     createTime?: string;
@@ -171,6 +190,7 @@ declare namespace API {
     pageSize?: number;
     sortField?: string;
     sortOrder?: string;
+    userAccount?: string;
     userRole?: string;
   };
 
@@ -187,6 +207,16 @@ declare namespace API {
 
   type UserUpdateRequest = {
     id?: number;
+    userAccount?: string;
+    userAvatar?: string;
+    userRole?: string;
+  };
+
+  type UserVO = {
+    accessKey?: string;
+    createTime?: string;
+    id?: number;
+    secretKey?: string;
     userAccount?: string;
     userAvatar?: string;
     userRole?: string;

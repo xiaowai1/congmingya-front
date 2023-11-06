@@ -1,5 +1,4 @@
 import Footer from '@/components/Footer';
-import { getLoginUserVOUsingGET, loginUsingPOST } from '@/services/congmingya/userController';
 import { Link } from '@@/exports';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
@@ -9,6 +8,7 @@ import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import {getLoginUserVOUsingGET, loginUsingPOST} from "@/services/congmingya/userController";
 
 // @ts-ignore
 const LoginMessage: React.FC<{
@@ -71,7 +71,12 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        const toUrl = urlParams.get('redirect')
+        if (toUrl){
+          history.push(urlParams.get('redirect') || '/');
+        }else {
+          history.push('/welcome');
+        }
         return;
       }
       // console.log("res:", res);

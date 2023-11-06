@@ -11,13 +11,11 @@
     ],
   },
   {
-    path: '/admin',
+    path: '/user/userList',
     icon: 'crown',
+    name: '用户管理',
     access: 'canAdmin',
-    routes: [
-      { path: '/admin', name: '管理页面', redirect: '/admin/sub-page' },
-      { path: '/admin/sub-page', name: '管理页面2', component: './Admin' },
-    ],
+    component: './User/UserList'
   },
   // { icon: 'table', name: '查询表格', path: '/list', component: './TableList' },
   { path: '/', redirect: '/welcome' },

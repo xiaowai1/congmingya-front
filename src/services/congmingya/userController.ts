@@ -52,12 +52,27 @@ export async function getLoginUserVOUsingGET(options?: { [key: string]: any }) {
   });
 }
 
+/** listUserLike POST /api/user/list/like */
+export async function listUserLikeUsingPOST(
+  body: API.UserQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageUser_>('/api/user/list/like', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listUserPage POST /api/user/list/page */
 export async function listUserPageUsingPOST(
   body: API.UserQueryRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponsePageUser_>('/api/user/list/page', {
+  return request<API.BaseResponsePageUserVO_>('/api/user/list/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
