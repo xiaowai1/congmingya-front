@@ -29,6 +29,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseObject_ = {
+    code?: number;
+    data?: Record<string, any>;
+    message?: string;
+  };
+
   type BaseResponsePageChart_ = {
     code?: number;
     data?: PageChart_;
@@ -44,6 +50,12 @@ declare namespace API {
   type BaseResponsePageUserVO_ = {
     code?: number;
     data?: PageUserVO_;
+    message?: string;
+  };
+
+  type BaseResponseString_ = {
+    code?: number;
+    data?: string;
     message?: string;
   };
 
@@ -110,6 +122,7 @@ declare namespace API {
   type LoginUserVO = {
     createTime?: string;
     id?: number;
+    integral?: number;
     updateTime?: string;
     userAccount?: string;
     userAvatar?: string;
@@ -160,10 +173,16 @@ declare namespace API {
     total?: number;
   };
 
+  type uploadUsingPOSTParams = {
+    /** 文件夹名 */
+    module: string;
+  };
+
   type User = {
     accessKey?: string;
     createTime?: string;
     id?: number;
+    integral?: number;
     isDelete?: string;
     secretKey?: string;
     updateTime?: string;
@@ -207,6 +226,7 @@ declare namespace API {
 
   type UserUpdateRequest = {
     id?: number;
+    integral?: number;
     userAccount?: string;
     userAvatar?: string;
     userRole?: string;
@@ -216,6 +236,7 @@ declare namespace API {
     accessKey?: string;
     createTime?: string;
     id?: number;
+    integral?: number;
     secretKey?: string;
     userAccount?: string;
     userAvatar?: string;

@@ -1,19 +1,19 @@
-import { deleteUserUsingPOST,listUserPageUsingPOST } from "@/services/congmingya/userController";
+import UpdateUser from '@/pages/User/UserList/components/UpdateUser';
 import { useModel } from '@@/exports';
 import {Avatar, Button, message, Popconfirm, Select, Space, Table} from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import Search from 'antd/es/input/Search';
-import { ColumnsType } from "antd/es/table";
-import React,{ useEffect,useState } from 'react';
-import {AntDesignOutlined} from "@ant-design/icons";
+import { ColumnsType } from 'antd/es/table';
+import React, { useEffect, useState } from 'react';
+import {deleteUserUsingPOST, listUserPageUsingPOST} from "@/services/congmingya/userController";
+import AddUser from "@/pages/User/UserList/components/AddUser";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
-
 
 const UserList: React.FC = () => {
   const initSearchParams = {
     current: 1,
-    pageSize: 3,
+    pageSize: 10,
     sortField: 'createTime',
     sortOrder: 'desc',
   };
@@ -23,7 +23,23 @@ const UserList: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [userList, setUserList] = useState<API.UserVO[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [updateButton, setUpdateButton] = useState<boolean>(false);
+  const [updateForm, setUpdateForm] = useState<API.UserVO>({
+    id: 0,
+    userAccount: '',
+    userAvatar: '',
+    userRole: '管理员',
+    integral: 0,
+  });
+  const [addButton, setAddButton] = useState<boolean>(false);
+  const [addForm, setAddForm] = useState<API.UserVO>({
+    id: 0,
+    userAccount: '',
+    userAvatar: '',
+    userRole: '普通用户',
+  });
 
+  //删除用户
   const handleDelete = async (values: number | undefined) => {
     const res = await deleteUserUsingPOST({ id: values });
     if (res.data) {
@@ -34,36 +50,85 @@ const UserList: React.FC = () => {
     }
   };
 
+  //点击修改事件
+  function updateClick(user: API.UserVO) {
+    setUpdateButton(true);
+    setUpdateForm(user);
+    console.log('updateForm: ', updateForm);
+  }
+
+  //提交修改表单成功回调函数
+  const updateSuccess = async () => {
+    setUpdateButton(false);
+    setSearchParams((old) => {
+      return { ...old };
+    });
+  };
+
+  //关闭修改弹出框
+  function updateCancel() {
+    setUpdateButton(false);
+  }
+
+  //关闭新增弹出框
+  function addCancel() {
+    setAddButton(false);
+  }
+
+  //点击新增事件
+  function addClick() {
+    setAddButton(true);
+  }
+
+  //提交新增表单成功回调函数
+  const addSuccess = async () => {
+    setAddButton(false);
+    setSearchParams((old) => {
+      return { ...old };
+    });
+    setAddForm({})
+  };
+
+
   // const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
   const defaultColumns: ColumnsType<API.UserVO> = [
-    // {
-    //   title: '用户头像',
-    //   dataIndex: 'userAvatar',
-    // },
+    {
+      title: '用户头像',
+      dataIndex: 'userAvatar',
+      width: '7%',
+      render: (userAvatar) => (
+        <Avatar src={userAvatar} alt="头像" />
+      ),
+    },
     {
       title: '用户账号',
       dataIndex: 'userAccount',
-      width: '10%'
+      width: '10%',
     },
     {
       title: 'accessKey',
       dataIndex: 'accessKey',
-      width: '20%'
+      width: '20%',
     },
     {
       title: 'secretKey',
       dataIndex: 'secretKey',
-      width: '20%'
+      width: '20%',
+    },
+    {
+      title: '鸭币',
+      dataIndex: 'integral',
+      width: '5%',
     },
     {
       title: '用户身份',
       dataIndex: 'userRole',
-      width: '10%'
+      width: '10%',
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      width: '20%'
+      width: '15%',
     },
     {
       title: '操作',
@@ -74,7 +139,9 @@ const UserList: React.FC = () => {
         return (
           <>
             <Space>
-              <Button type={'default'} size={'small'}>修改</Button>
+              <Button type={'default'} size={'small'} onClick={() => updateClick(user)}>
+                修改
+              </Button>
               <Popconfirm title="确定要删除该用户吗?" onConfirm={() => handleDelete(user.id)}>
                 <Button danger size={'small'}>
                   删除
@@ -93,15 +160,16 @@ const UserList: React.FC = () => {
       const res = await listUserPageUsingPOST(searchParams);
       if (res.data) {
         let list = res.data.records;
-        if (list){
-          list = list.map(user => {
-            if (user.userRole === "admin"){
-              return {...user, userRole: "管理员" };
-            }else {
-              return {...user, userRole: "普通用户" };
-            }
-          })
+        if (list) {
           // @ts-ignore
+          list = list.map((user) => {
+            let userAvatar = user.userAvatar
+            if (user.userRole === 'admin') {
+              return { ...user, userAvatar: userAvatar, userRole: '管理员' };
+            } else {
+              return { ...user, userAvatar: userAvatar, userRole: '普通用户' };
+            }
+          });
         }
         setUserList(list ?? []);
         setTotal(res.data.total ?? 0);
@@ -120,9 +188,21 @@ const UserList: React.FC = () => {
 
   return (
     <div>
+      <UpdateUser
+        open={updateButton}
+        user={updateForm}
+        onSuccess={updateSuccess}
+        onCancel={updateCancel}
+      />
+      <AddUser
+        open={addButton}
+        user={addForm}
+        onSuccess={addSuccess}
+        onCancel={addCancel}
+      />
       <div style={{ marginBottom: 16 }}>
         <Space>
-          <Button type="primary">新增用户</Button>
+          <Button type="primary" onClick={addClick}>新增用户</Button>
           <Select
             placeholder="请选择用户身份"
             allowClear={true}
@@ -171,7 +251,7 @@ const UserList: React.FC = () => {
           pageSize: searchParams.pageSize,
           total: total,
           showSizeChanger: true,
-          pageSizeOptions: [3, 5, 10, 20],
+          pageSizeOptions: [10, 15, 20, 50],
         }}
       />
     </div>

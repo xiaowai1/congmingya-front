@@ -1,5 +1,5 @@
 import { request } from '@/app';
-import { updateUserUsingPOST } from '@/services/congmingya/userController';
+import {addUserUsingPOST, updateUserUsingPOST} from '@/services/congmingya/userController';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Form,
@@ -16,7 +16,7 @@ import { Group } from 'antd/es/radio';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import { useEffect, useState } from 'react';
 
-export default function UpdateUser({
+export default function AddUser({
   open,
   user,
   onSuccess,
@@ -63,9 +63,10 @@ export default function UpdateUser({
       // Get this url from response in real world.
       getBase64(info.file.originFileObj as RcFile, (url) => {
         console.log('file:', info.file.response.data);
-        user.userAvatar = info.file.response.data;
+        // user.userAvatar = info.file.response.data;
         setLoading(false);
         setImageUrl(info.file.response.data);
+        console.log('imageUrl:', imageUrl);
       });
     }
   };
@@ -88,37 +89,34 @@ export default function UpdateUser({
   async function onSubmit() {
     //验证并获取数据
     const result = await form.validateFields();
-
     try {
-      const res = await updateUserUsingPOST({
+      console.log("imageUrl:", result)
+      const res = await addUserUsingPOST({
         ...result,
         id: user.id,
         userAvatar: imageUrl,
         userRole: result.userRole === '管理员' ? 'admin' : 'user',
       });
-      console.log('res:', res);
       if (res) {
-        message.success('修改成功');
+        message.success('添加成功');
       }
       onSuccess && onSuccess();
+      form.resetFields();
     } catch (error) {
       // @ts-ignore
       message.error(error.response.data.message);
     }
   }
 
-  useEffect(() => {
-    form.setFieldsValue(user);
-  }, [user]);
+  // useEffect(() => {
+  //   form.setFieldsValue(user);
+  // }, [user]);
 
   return (
-    <Modal open={open} title={'修改用户'} onOk={onSubmit} onCancel={onCancel}>
-      <Form form={form}>
+    <Modal open={open} title={'新增用户'} onOk={onSubmit} onCancel={onCancel}>
+      <Form form={form} initialValues={user}>
         <Item name={'userAccount'} label={'用户账号'} rules={userAccountRules}>
           <Input />
-        </Item>
-        <Item name={'integral'} label={'鸭币数量'}>
-          <InputNumber min={0} max={100} />
         </Item>
         <Item name={'userAvatar'} label={'用户头像'}>
           <Upload
@@ -133,8 +131,7 @@ export default function UpdateUser({
             {imageUrl ? (
               <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
             ) : (
-              // uploadButton
-              <img src={user.userAvatar} alt="avatar" style={{ width: '100%' }} />
+              uploadButton
             )}
           </Upload>
         </Item>

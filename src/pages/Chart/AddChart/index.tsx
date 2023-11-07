@@ -82,7 +82,7 @@ const AddChart: React.FC = () => {
           </Form.Item>
           <Form.Item name="file" label="原始数据" valuePropName="fileList" getValueFromEvent={normFile}>
             <Upload name="file" maxCount={1}>
-              <Button icon={<UploadOutlined />}>上传 CSV 文件</Button>
+              <Button icon={<UploadOutlined />}>上传 Excel 文件</Button>
             </Upload>
           </Form.Item>
 
