@@ -117,6 +117,14 @@ export async function registerUsingPOST(
   });
 }
 
+/** sign POST /api/user/sign */
+export async function signUsingPOST(options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean_>('/api/user/sign', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** updateUser POST /api/user/update */
 export async function updateUserUsingPOST(
   body: API.UserUpdateRequest,

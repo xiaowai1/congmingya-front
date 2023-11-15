@@ -1,4 +1,22 @@
 declare namespace API {
+  type AiResponseMessage = {
+    _end?: boolean;
+    created?: number;
+    id?: string;
+    messages?: Message[];
+    need_clear_history?: boolean;
+    object?: string;
+    result?: string;
+    sentence_id?: number;
+    usage?: Usage;
+  };
+
+  type BaseResponseAiResponseMessage_ = {
+    code?: number;
+    data?: AiResponseMessage;
+    message?: string;
+  };
+
   type BaseResponseBiResponse_ = {
     code?: number;
     data?: BiResponse;
@@ -14,6 +32,12 @@ declare namespace API {
   type BaseResponseChart_ = {
     code?: number;
     data?: Chart;
+    message?: string;
+  };
+
+  type BaseResponseListChat_ = {
+    code?: number;
+    data?: Chat[];
     message?: string;
   };
 
@@ -38,6 +62,12 @@ declare namespace API {
   type BaseResponsePageChart_ = {
     code?: number;
     data?: PageChart_;
+    message?: string;
+  };
+
+  type BaseResponsePageChatAssistant_ = {
+    code?: number;
+    data?: PageChatAssistant_;
     message?: string;
   };
 
@@ -99,6 +129,45 @@ declare namespace API {
     userId?: number;
   };
 
+  type Chat = {
+    assistantId?: number;
+    content?: string;
+    createTime?: string;
+    id?: number;
+    isDelete?: string;
+    isUser?: string;
+    updateTime?: string;
+    userId?: number;
+  };
+
+  type ChatAssistant = {
+    createTime?: string;
+    description?: string;
+    id?: number;
+    isDelete?: string;
+    title?: string;
+    updateTime?: string;
+    userId?: number;
+  };
+
+  type ChatAssistantQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
+  type ChatQueryRequest = {
+    assistantId?: number;
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    userId?: number;
+  };
+
   type DeleteRequest = {
     id?: number;
   };
@@ -107,6 +176,11 @@ declare namespace API {
     chartType?: string;
     goal?: string;
     name?: string;
+  };
+
+  type getAnswerUsingPOSTParams = {
+    assistantId?: number;
+    content?: string;
   };
 
   type getChartByIdUsingGETParams = {
@@ -120,13 +194,20 @@ declare namespace API {
   };
 
   type LoginUserVO = {
+    accessKey?: string;
     createTime?: string;
     id?: number;
     integral?: number;
+    secretKey?: string;
     updateTime?: string;
     userAccount?: string;
     userAvatar?: string;
     userRole?: string;
+  };
+
+  type Message = {
+    content?: string;
+    role?: string;
   };
 
   type OrderItem = {
@@ -142,6 +223,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: Chart[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageChatAssistant_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: ChatAssistant[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -174,8 +268,14 @@ declare namespace API {
   };
 
   type uploadUsingPOSTParams = {
-    /** 文件夹名 */
+    /** module */
     module: string;
+  };
+
+  type Usage = {
+    completion_tokens?: number;
+    prompt_tokens?: number;
+    total_tokens?: number;
   };
 
   type User = {

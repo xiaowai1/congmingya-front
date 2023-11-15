@@ -9,6 +9,7 @@ import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { errorConfig } from './requestConfig';
 import {getLoginUserVOUsingGET} from "@/services/congmingya/userController";
+import {createContext} from "react";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -131,7 +132,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost:8080/',
   withCredentials: true,
   ...errorConfig,
 };

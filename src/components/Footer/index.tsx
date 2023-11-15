@@ -1,33 +1,65 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import '@umijs/max';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 const Footer: React.FC = () => {
-  const defaultMessage = '蚂蚁集团体验技术部出品';
+  const defaultMessage = '聪明鸭';
   const currentYear = new Date().getFullYear();
+
+  // const [pageContentHeight, setPageContentHeight] = useState(0);
+  // const [windowHeight, setWindowHeight] = useState(0);
+  //
+  // const [isContentOverflowing, setIsContentOverflowing] = useState(false);
+  //
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setPageContentHeight(document.documentElement.scrollHeight);
+  //     setWindowHeight(window.innerHeight);
+  //     setIsContentOverflowing(
+  //       pageContentHeight > windowHeight
+  //     );
+  //
+  //     // 初始加载时获取页面内容长度和窗口高度
+  //     setPageContentHeight(document.documentElement.scrollHeight);
+  //     setWindowHeight(window.innerHeight);
+  //     console.log("isContentOverflowing:", isContentOverflowing)
+  //   };
+  //
+  //   window.addEventListener('resize', handleResize);
+  //   handleResize();
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
+
   return (
     <DefaultFooter
       style={{
         background: 'none',
+        // position: isContentOverflowing ? 'relative' : 'fixed',
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        right: 0,
       }}
       copyright={`${currentYear} ${defaultMessage}`}
       links={[
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
+          key: 'name',
+          title: '聪明鸭',
+          href: '',
           blankTarget: true,
         },
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          href: 'https://github.com/xiaowai1/congmingya',
           blankTarget: true,
         },
         {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          key: '聪明鸭',
+          title: '聪明鸭',
+          href: 'https://github.com/xiaowai1/congmingya',
           blankTarget: true,
         },
       ]}

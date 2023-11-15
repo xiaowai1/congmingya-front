@@ -1,23 +1,45 @@
 ﻿export default [
-  { path: '/user', name: '登录', layout: false, routes: [{ path: '/user/login', component: './User/Login' }] },
-  { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
   {
-    path: '/',
+    path: '/user',
+    name: '登录',
+    layout: false,
+    routes: [
+      { path: '/user/login', component: './User/Login' },
+      { path: '/user/register', component: './User/Register' }
+    ],
+  },
+  { path: '/welcome', icon: 'smile', component: 'Welcome' },
+  { path: '/', redirect: '/welcome' },
+  {
+    path: '/chat/list',
+    name: '我的助手',
+    icon: 'commentOutlined',
+    component: './Chat/List/',
+  },
+  {
+    path: '/chat/:id',
+    name: '我的助手',
+    menu: false,
+    icon: 'commentOutlined',
+    component: './Chat/',
+  },
+  {
+    path: '/chart',
     name: '智能报表',
     icon: 'barChart',
     routes: [
-      { path: '/add_chart', name: '智能分析', icon: 'barChart', component: './Chart/AddChart' },
-      { path: '/my_chart', name: '我的图表', icon: 'pieChart', component: './Chart/MyChart' },
+      { path: '/chart/add_chart', name: '智能分析', icon: 'barChart', component: './Chart/AddChart' },
+      { path: '/chart/my_chart', name: '我的图表', icon: 'pieChart', component: './Chart/MyChart' },
     ],
   },
   {
-    path: '/user/userList',
+    path: '/userList',
     icon: 'crown',
     name: '用户管理',
     access: 'canAdmin',
-    component: './User/UserList'
+    component: './User/UserList',
   },
-  // { icon: 'table', name: '查询表格', path: '/list', component: './TableList' },
-  { path: '/', redirect: '/welcome' },
+  { path: '/user_center', icon: 'userOutlined', name: '个人中心', component: './User/UserCenter' },
   { path: '*', layout: false, component: './404' },
 ];
+

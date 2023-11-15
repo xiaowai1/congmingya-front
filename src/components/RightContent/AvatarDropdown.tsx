@@ -1,3 +1,4 @@
+import { logoutUsingPOST } from '@/services/congmingya/userController';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
@@ -7,7 +8,7 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
-import {logoutUsingPOST} from "@/services/congmingya/userController";
+import {Link} from "@@/exports";
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -24,7 +25,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   /**
    * 退出登录，并且将当前的 url 保存
    */
-  const loginOut = async () => {
+  const logOut = async () => {
     await logoutUsingPOST();
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
@@ -64,7 +65,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
         flushSync(() => {
           setInitialState((s) => ({ ...s, currentUser: undefined }));
         });
-        loginOut();
+        logOut();
+        return;
+      }
+      if (key === 'center') {
+        history.push("/user/user_center")
         return;
       }
       history.push(`/account/${key}`);
@@ -95,23 +100,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   }
 
   const menuItems = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: '个人设置',
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
+    {
+      key: 'center',
+      icon: <UserOutlined />,
+      label: '个人中心',
+    },
     {
       key: 'logout',
       icon: <LogoutOutlined />,
