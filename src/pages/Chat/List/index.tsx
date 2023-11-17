@@ -23,6 +23,7 @@ const AssistantList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState ?? {};
   const [chatList, setChatList] = useState<API.ChatAssistant[]>([]);
+  const [total, setTotal] = useState<number>(0);
 
   const startChat = async (id: number | undefined) => {
     history.push(`/chat/${id}`);
@@ -32,7 +33,9 @@ const AssistantList: React.FC = () => {
     async function loadAssistants() {
       try {
         const res = await listMyAssistantUsingPOST(searchParams);
-        if (res.data) {
+        console.log('res:', res);
+        if (res.code == 0 && res.data) {
+          setTotal(res.data.total ?? 0);
           setChatList(res.data.records ?? []);
         }
         console.log('chatList:', chatList);
@@ -71,7 +74,7 @@ const AssistantList: React.FC = () => {
           },
           current: searchParams.current,
           pageSize: searchParams.pageSize,
-          // total: total,
+          total: total,
           showSizeChanger: true,
           pageSizeOptions: [10, 15, 20, 50],
         }}

@@ -49,9 +49,11 @@ const Register: React.FC = () => {
           query,
         });
         return;
+      }else {
+        message.error(res.message);
       }
     } catch (error: any) {
-      message.error(error.response.data.message);
+      message.error("注册失败，请重试");
     }
   };
 
@@ -74,10 +76,6 @@ const Register: React.FC = () => {
               submitText: '注册',
             },
           }}
-          // contentStyle={{
-          //   minWidth: 280,
-          //   maxWidth: '75vw',
-          // }}
           logo={<img alt="logo" src="/logo.svg" height={50} />}
           title="聪明鸭AI助手"
           subTitle={'聪明鸭 — 做您最聪明的AI助手'}

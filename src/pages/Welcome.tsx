@@ -83,10 +83,6 @@ const InfoCard: React.FC<{
       >
         {desc}
       </div>
-      {/*<a href={href} target="_blank" rel="noreferrer">*/}
-      {/*  去使用 {'>'}*/}
-      {/*</a>*/}
-      {/*<a onClick={() => {onClick(1)}}>去聊天</a>*/}
     </div>
   );
 };
@@ -104,8 +100,17 @@ const Welcome: React.FC = () => {
 
 
   const startChat = async () => {
-    const res = await getLatestAssistantUsingGET();
-    history.push(`/chat/${res.data}`);
+    try {
+      const res = await getLatestAssistantUsingGET();
+      history.push(`/chat/${res.data}`);
+    } catch (e) {
+      const res = await addAssistantUsingPOST();
+      const id = res.data;
+      if (res.code === 0) {
+        message.success('新建助手成功');
+        history.push(`/chat/${id}`);
+      }
+    }
   }
 
   const addAssistant = async () => {

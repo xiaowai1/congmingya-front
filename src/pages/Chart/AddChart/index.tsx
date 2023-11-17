@@ -4,6 +4,7 @@ import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import {genChartByAiUsingPOST} from "@/services/congmingya/chartController";
+import {request} from "@/app";
 
 const AddChart: React.FC = () => {
   const [form] = useForm();
@@ -25,7 +26,7 @@ const AddChart: React.FC = () => {
       file: undefined,
     };
     try {
-      const res = await genChartByAiUsingPOST(params, {}, values.file.file.originFileObj);
+      const res = await genChartByAiUsingPOST(params, {}, values.file[0].originFileObj);
       // const res = await genChartByAiAsyncMqUsingPOST(params, {}, values.file.file.originFileObj);
       if (!res?.data) {
         message.error('分析失败');
@@ -40,7 +41,6 @@ const AddChart: React.FC = () => {
   };
 
   const normFile = (e: any) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -81,7 +81,7 @@ const AddChart: React.FC = () => {
             />
           </Form.Item>
           <Form.Item name="file" label="原始数据" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload name="file" maxCount={1}>
+            <Upload name="file" maxCount={1} action={request.baseURL + '/api/oss/file/upload/excel?module=file'}>
               <Button icon={<UploadOutlined />}>上传 Excel 文件</Button>
             </Upload>
           </Form.Item>

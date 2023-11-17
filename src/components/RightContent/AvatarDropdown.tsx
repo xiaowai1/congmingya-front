@@ -69,7 +69,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
         return;
       }
       if (key === 'center') {
-        history.push("/user/user_center")
+        history.push("/user_center")
         return;
       }
       history.push(`/account/${key}`);

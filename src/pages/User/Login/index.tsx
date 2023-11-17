@@ -1,14 +1,16 @@
 import Footer from '@/components/Footer';
+import { getLoginUserVOUsingGET, loginUsingPOST } from '@/services/congmingya/userController';
 import { Link } from '@@/exports';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
+import { Alert, message, Tabs, theme } from 'antd';
+import type { CSSProperties } from 'react';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-import {getLoginUserVOUsingGET, loginUsingPOST} from "@/services/congmingya/userController";
+
 
 // @ts-ignore
 const LoginMessage: React.FC<{
@@ -71,22 +73,19 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        const toUrl = urlParams.get('redirect')
-        if (toUrl){
+        const toUrl = urlParams.get('redirect');
+        if (toUrl) {
           history.push(urlParams.get('redirect') || '/');
-        }else {
+        } else {
           history.push('/welcome');
         }
         return;
+      }else {
+        message.error(res.message);
       }
-      // console.log("res:", res);
-      // // 如果失败去设置用户错误信息
-      // setUserLoginState(res);
     } catch (error) {
-      // const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log(error);
       // @ts-ignore
-      message.error(error.response.data.message);
+      message.error("登陆失败,请重试");
     }
   };
 
@@ -111,9 +110,9 @@ const Login: React.FC = () => {
           logo={<img alt="logo" src="/logo.svg" height={50} />}
           title="聪明鸭AI助手"
           subTitle={'聪明鸭 — 做您最聪明的AI助手'}
-          initialValues={{
-            autoLogin: true,
-          }}
+          // initialValues={{
+          //   autoLogin: true,
+          // }}
           onFinish={async (values) => {
             await handleSubmit(values as API.UserLoginRequest);
           }}
@@ -194,4 +193,5 @@ const Login: React.FC = () => {
     </div>
   );
 };
+
 export default Login;
