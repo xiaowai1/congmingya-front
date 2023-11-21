@@ -10,6 +10,21 @@ export async function addAssistantUsingPOST(options?: { [key: string]: any }) {
   });
 }
 
+/** deleteChatAssistant POST /api/assistant/delete */
+export async function deleteChatAssistantUsingPOST(
+  body: API.DeleteRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/assistant/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** getLatestAssistant GET /api/assistant/get/latest */
 export async function getLatestAssistantUsingGET(options?: { [key: string]: any }) {
   return request<API.BaseResponseLong_>('/api/assistant/get/latest', {

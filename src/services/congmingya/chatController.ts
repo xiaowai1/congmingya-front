@@ -8,7 +8,7 @@ export async function getAnswerUsingPOST(
   params: API.getAnswerUsingPOSTParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseAiResponseMessage_>('/api/chat/get/answer', {
+  return request<API.BaseResponseAiChatResponse_>('/api/chat/get/answer', {
     method: 'POST',
     params: {
       ...params,

@@ -1,15 +1,13 @@
-import { UploadOutlined } from '@ant-design/icons';
-import {Button, Card, Form, Input, message, Select, Space, Upload} from 'antd';
+import { getLoginUserVOUsingGET } from '@/services/congmingya/userController';
+import { useModel } from '@@/exports';
+import { Button, Card, Form, Input, message, Select, Space } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
-import {genChartByAiUsingPOST} from "@/services/congmingya/chartController";
-import {request} from "@/app";
-import {useModel} from "@@/exports";
-import {flushSync} from "react-dom";
-import {getLoginUserVOUsingGET} from "@/services/congmingya/userController";
+import { flushSync } from 'react-dom';
+import {genPictureUsingPOST} from "@/services/congmingya/pictureController";
 
-const AddChart: React.FC = () => {
+const AddPicture: React.FC = () => {
   const [form] = useForm();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -27,12 +25,10 @@ const AddChart: React.FC = () => {
     // 对接后端，上传数据
     const params = {
       ...values,
-      file: undefined,
     };
     try {
-      const res = await genChartByAiUsingPOST(params, {}, values.file[0].originFileObj);
+      const res = await genPictureUsingPOST(params, {});
       const newLoginUser = await getLoginUserVOUsingGET();
-
       flushSync(() => {
         // @ts-ignore
         setInitialState((s) => ({
@@ -43,7 +39,7 @@ const AddChart: React.FC = () => {
       if (!res?.data) {
         message.error(res.message);
       } else {
-        message.success('分析任务提交成功，稍后请在我的图表页面查看');
+        message.success('任务提交成功，稍后请在我的图片页面查看');
         form.resetFields();
       }
     } catch (e: any) {
@@ -60,11 +56,11 @@ const AddChart: React.FC = () => {
   };
 
   return (
-    <div className="add-chart">
-      <Card title="智能分析">
+    <div className="add-picture">
+      <Card title="智能生图">
         <Form
           form={form}
-          name="addChart"
+          name="addPicture"
           labelAlign="left"
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
@@ -72,32 +68,36 @@ const AddChart: React.FC = () => {
           initialValues={{}}
         >
           <Form.Item
-            name="goal"
-            label="分析目标"
-            rules={[{ required: true, message: '请输入分析目标' }]}
+            name="title"
+            label="图片标题"
+            rules={[{ required: true, message: '请输入图片标题' }]}
           >
-            <TextArea placeholder="请输入你的分析需求，比如：分析网站用户的增长情况" />
+            <TextArea placeholder="请为要生成的图片拟一个标题" />
           </Form.Item>
-          <Form.Item name="name" label="图表名称">
-            <Input placeholder="请输入图表名称" />
+          <Form.Item
+            name="description"
+            label="图片描述"
+            rules={[{ required: true, message: '请输入想要生成的画面内容' }]}
+          >
+            <Input placeholder="请输入想要生成的画面内容" />
           </Form.Item>
-          <Form.Item name="chartType" label="图表类型">
+          <Form.Item
+            name="size"
+            label="图片大小"
+            rules={[{ required: true, message: '请选择想要生成的画面大小' }]}
+          >
             <Select
+              placeholder={'请选择图片大小'}
               options={[
-                { value: '折线图', label: '折线图' },
-                { value: '柱状图', label: '柱状图' },
-                { value: '堆叠图', label: '堆叠图' },
-                { value: '饼图', label: '饼图' },
-                { value: '雷达图', label: '雷达图' },
+                { value: '768x768', label: '768x768' },
+                { value: '768x1024', label: '768x1024' },
+                { value: '1024x768', label: '1024x768' },
+                { value: '576x1024', label: '576x1024' },
+                { value: '1024x576', label: '1024x576' },
+                { value: '1024x1024', label: '1024x1024' },
               ]}
             />
           </Form.Item>
-          <Form.Item name="file" label="原始数据" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload name="file" maxCount={1} action={request.baseURL + '/api/oss/file/upload/excel?module=file'}>
-              <Button icon={<UploadOutlined />}>上传 Excel 文件</Button>
-            </Upload>
-          </Form.Item>
-
           <Form.Item wrapperCol={{ span: 16, offset: 4 }}>
             <Space>
               <Button type="primary" htmlType="submit" loading={submitting} disabled={submitting}>
@@ -111,4 +111,4 @@ const AddChart: React.FC = () => {
     </div>
   );
 };
-export default AddChart;
+export default AddPicture;

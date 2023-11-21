@@ -1,6 +1,7 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import { history } from '@umijs/max';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -70,6 +71,10 @@ export const errorConfig: RequestConfig = {
           }
         }
       } else if (error.response) {
+        if (error.response.status === 401){
+          message.error('登录过期，请重新登录！');
+          history.push('/user/login')
+        }
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
         // message.error(`Response status:${error.response.status}`);
@@ -89,8 +94,12 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
+      const token = localStorage.getItem('userToken'); // 从 localStorage 中获取用户的 token
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`, // 将 token 添加到 Authorization 请求头中
+      };
       // const url = config?.url?.concat('?token = 123');
-      // return { ...config, url };
       return config
     },
   ],

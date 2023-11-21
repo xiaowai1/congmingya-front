@@ -5,12 +5,10 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, message, Tabs, theme } from 'antd';
-import type { CSSProperties } from 'react';
+import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-
 
 // @ts-ignore
 const LoginMessage: React.FC<{
@@ -70,6 +68,8 @@ const Login: React.FC = () => {
       const res = await loginUsingPOST(values);
       if (res.code === 0) {
         const defaultLoginSuccessMessage = '登录成功！';
+        // @ts-ignore
+        localStorage.setItem('userToken', res.data);
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
@@ -80,12 +80,12 @@ const Login: React.FC = () => {
           history.push('/welcome');
         }
         return;
-      }else {
+      } else {
         message.error(res.message);
       }
     } catch (error) {
       // @ts-ignore
-      message.error("登陆失败,请重试");
+      message.error('登陆失败,请重试');
     }
   };
 

@@ -40,6 +40,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
         }),
       });
     }
+    localStorage.removeItem("userToken")
   };
   const actionClassName = useEmotionCss(({ token }) => {
     return {

@@ -1,10 +1,13 @@
+import {
+  addAssistantUsingPOST,
+  getLatestAssistantUsingGET,
+} from '@/services/congmingya/chatAssistantController';
 import { CommentOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import {Button, Card, Col, Flex, message, Radio, Row, theme, Typography} from 'antd';
+import { Button, Card, Col, Flex, message, Row, theme, Typography } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import React, { useState } from 'react';
-import {addAssistantUsingPOST, getLatestAssistantUsingGET} from "@/services/congmingya/chatAssistantController";
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -92,12 +95,12 @@ const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const [size, setSize] = useState<SizeType>('large');
   const { currentUser } = initialState ?? {};
+  const [ellipsis, setEllipsis] = useState(true);
 
   const imgStyle: React.CSSProperties = {
     display: 'block',
     width: 273,
   };
-
 
   const startChat = async () => {
     try {
@@ -111,7 +114,7 @@ const Welcome: React.FC = () => {
         history.push(`/chat/${id}`);
       }
     }
-  }
+  };
 
   const addAssistant = async () => {
     try {
@@ -128,19 +131,24 @@ const Welcome: React.FC = () => {
     // history.push('/chat/' + chatId);
   };
 
+  const onClick = async () => {
+    history.push('/chart/add_chart');
+  };
+
   const onClick1 = async () => {
     const res = await getLatestAssistantUsingGET();
     history.push(`/chat/${res.data}`);
-  }
+  };
 
-  const onClick = async () => {
-    history.push('/chart/add_chart');
-  }
+  const onClick2 = async () => {
+    history.push('/picture/add_picture');
+  };
 
   return (
     <PageContainer>
       <Card
-        style={{ borderRadius: 8 }}
+        style={{ borderRadius: 8, height: '100%' }}
+        size="default"
         cover={<img alt="example" src="https://www.yucongming.com/static/ModelBg.f4069726.png" />}
       >
         <div
@@ -183,91 +191,96 @@ const Welcome: React.FC = () => {
               >
                 新建聊天
               </Button>
-              <Button type="default" icon={<CommentOutlined />} size={size} onClick={() => {
-                startChat()
-              }}>
+              <Button
+                type="default"
+                icon={<CommentOutlined />}
+                size={size}
+                onClick={() => {
+                  startChat();
+                }}
+              >
                 开始聊天
               </Button>
             </Flex>
           </div>
         </div>
       </Card>
-        <div>
-          <Row>
-            <Col span={12}>
-              <Card hoverable>
-                <Flex justify="space-between" wrap={"nowrap"}>
-                  <img
-                    alt="avatar"
-                    src="https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/icon/%E4%BF%A1%E6%81%AF%E6%B6%88%E6%81%AF.png"
-                    style={imgStyle}
-                  />
-                  <Flex vertical align="flex-end" justify="space-between" style={{ padding: 32 }}>
-                    <Typography.Title level={3}>
-                      一个多功能的AI语言助手，旨在为用户提供各种语言相关的支持和服务。
-                    </Typography.Title>
-                    <Button type="primary" onClick={onClick1} target="_blank">
-                      去使用
-                    </Button>
-                  </Flex>
+      <div>
+        <Row >
+          <Col xs={24} sm={12} md={8}>
+            <Card hoverable size="default" style={{ height: '100%' }}>
+              <Flex justify="space-between" wrap={'nowrap'}>
+                <img
+                  height={'20%'}
+                  alt="avatar"
+                  src="https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/icon/%E4%BF%A1%E6%81%AF%E6%B6%88%E6%81%AF.png"
+                  style={imgStyle}
+                />
+                <Flex vertical align="flex-end" justify="space-between" style={{ padding: 32 }}>
+                  <Typography.Title level={3} ellipsis={{
+                    rows: 3,
+                    expandable: false,
+                    tooltip: '多功能的AI语言助手，旨在为用户提供各种语言相关的支持和服务。'
+                  }}>
+                    多功能的AI语言助手，旨在为用户提供各种语言相关的支持和服务。
+                  </Typography.Title>
+                  <Button type="primary" onClick={onClick1} target="_blank">
+                    去使用
+                  </Button>
                 </Flex>
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card hoverable>
-                <Flex justify="space-between" wrap={"nowrap"}>
-                  <img
-                    alt="avatar"
-                    src="https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/icon/fsux_%E5%9B%BE%E8%A1%A8_%E5%A0%86%E7%A7%AF%E6%9F%B1%E7%8A%B6%E5%9B%BE.png"
-                    style={imgStyle}
-                  />
-                  <Flex vertical align="flex-end" justify="space-between" style={{ padding: 32 }}>
-                    <Typography.Title level={3}>
-                      智能图表：只需要导入数据，输入想要的分析目标，就能利用AI生成符合要求的图表以及分析结论。
-                    </Typography.Title>
-                    <Button type="primary" onClick={onClick} target="_blank">
-                      去使用
-                    </Button>
-                  </Flex>
+              </Flex>
+            </Card>
+          </Col>
+          <Col xs={24} sm={12} md={8}>
+            <Card hoverable size="default" style={{ height: '100%' }}>
+              <Flex justify="space-between" wrap={'nowrap'}>
+                <img
+                  height={'20%'}
+                  alt="avatar"
+                  src="https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/icon/fsux_%E5%9B%BE%E8%A1%A8_%E5%A0%86%E7%A7%AF%E6%9F%B1%E7%8A%B6%E5%9B%BE.png"
+                  style={imgStyle}
+                />
+                <Flex vertical align="flex-end" justify="space-between" style={{ padding: 32, height: "20%" }}>
+                  <Typography.Title level={3} ellipsis={ ellipsis ? {
+                    rows: 3,
+                    expandable: false,
+                    tooltip: '导入数据，输入想要的分析目标，就能利用AI生成符合要求的图表以及分析结论。'
+                  } : false}>
+                    导入数据，输入想要的分析目标，就能利用AI生成符合要求的图表以及分析结论。
+                  </Typography.Title>
+                  <Button type="primary" onClick={onClick} target="_blank">
+                    去使用
+                  </Button>
                 </Flex>
-              </Card>
-            </Col>
-
-          </Row>
-
-          {/*<div*/}
-          {/*  style={{*/}
-          {/*    display: 'flex',*/}
-          {/*    flexWrap: 'wrap',*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <InfoCard*/}
-          {/*    index={1}*/}
-          {/*    href="https://umijs.org/docs/introduce/introduce"*/}
-          {/*    title="了解 umi"*/}
-          {/*    desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"*/}
-          {/*  />*/}
-          {/*  <InfoCard*/}
-          {/*    index={2}*/}
-          {/*    title="了解 ant design"*/}
-          {/*    href="https://ant.design"*/}
-          {/*    desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"*/}
-          {/*  />*/}
-          {/*  <InfoCard*/}
-          {/*    index={3}*/}
-          {/*    title="了解 Pro Components"*/}
-          {/*    href="https://procomponents.ant.design"*/}
-          {/*    desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"*/}
-          {/*  />*/}
-          {/*  <InfoCard*/}
-          {/*    index={4}*/}
-          {/*    title="了解 Pro Components"*/}
-          {/*    href="https://procomponents.ant.design"*/}
-          {/*    desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"*/}
-          {/*  />*/}
-          {/*</div>*/}
-        </div>
-      {/*</Card>*/}
+              </Flex>
+            </Card>
+          </Col>
+          <Col xs={24} sm={12} md={8} >
+            <Card hoverable size="default" style={{ height: '100%' }}>
+              <Flex justify="space-between" wrap={'nowrap'}>
+                <img
+                  height={'20%'}
+                  alt="avatar"
+                  src="https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/icon/%E5%9B%BE%E7%89%87.png"
+                  style={imgStyle}
+                />
+                <Flex vertical align="flex-end" justify="space-between" style={{ padding: 32 }}>
+                  <Typography.Title level={3} ellipsis={{
+                    rows: 3,
+                    expandable: false,
+                    tooltip: '输入想要生成的画面内容，帮您快速生成指定大小的图片。'
+                  }}>
+                    输入想要生成的画面内容，帮您快速生成指定大小的图片。
+                  </Typography.Title>
+                  <Button type="primary" onClick={onClick2} target="_blank">
+                    去使用
+                  </Button>
+                </Flex>
+              </Flex>
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </PageContainer>
   );
 };

@@ -1,8 +1,8 @@
 import ChatPage from '@/pages/Chat/components/ChatComponent';
-import React from 'react';
+import React, {useLayoutEffect, useRef} from 'react';
 
 const HomePage: React.FC = () => {
-  return <ChatPage />;
+  return <ChatPage />
 };
 
 export default HomePage;

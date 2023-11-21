@@ -1,5 +1,5 @@
 declare namespace API {
-  type AiResponseMessage = {
+  type AiChatResponse = {
     _end?: boolean;
     created?: number;
     id?: string;
@@ -11,9 +11,9 @@ declare namespace API {
     usage?: Usage;
   };
 
-  type BaseResponseAiResponseMessage_ = {
+  type BaseResponseAiChatResponse_ = {
     code?: number;
-    data?: AiResponseMessage;
+    data?: AiChatResponse;
     message?: string;
   };
 
@@ -71,6 +71,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePagePicture_ = {
+    code?: number;
+    data?: PagePicture_;
+    message?: string;
+  };
+
   type BaseResponsePageUser_ = {
     code?: number;
     data?: PageUser_;
@@ -80,6 +86,18 @@ declare namespace API {
   type BaseResponsePageUserVO_ = {
     code?: number;
     data?: PageUserVO_;
+    message?: string;
+  };
+
+  type BaseResponsePicture_ = {
+    code?: number;
+    data?: Picture;
+    message?: string;
+  };
+
+  type BaseResponsePictureResponse_ = {
+    code?: number;
+    data?: PictureResponse;
     message?: string;
   };
 
@@ -188,6 +206,11 @@ declare namespace API {
     id?: number;
   };
 
+  type getPictureByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
   type getUserByIdUsingGETParams = {
     /** id */
     id?: number;
@@ -241,6 +264,19 @@ declare namespace API {
     total?: number;
   };
 
+  type PagePicture_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: Picture[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
   type PageUser_ = {
     countId?: string;
     current?: number;
@@ -265,6 +301,51 @@ declare namespace API {
     searchCount?: boolean;
     size?: number;
     total?: number;
+  };
+
+  type Picture = {
+    createTime?: string;
+    description?: string;
+    execMessage?: string;
+    id?: number;
+    isDelete?: string;
+    size?: string;
+    status?: string;
+    title?: string;
+    updateTime?: string;
+    url?: string;
+    userId?: number;
+  };
+
+  type PictureAddRequest = {
+    description?: string;
+    size?: string;
+    title?: string;
+  };
+
+  type PictureQueryRequest = {
+    current?: number;
+    description?: string;
+    id?: number;
+    pageSize?: number;
+    size?: string;
+    sortField?: string;
+    sortOrder?: string;
+    title?: string;
+    userId?: number;
+  };
+
+  type PictureResponse = {
+    description?: string;
+    id?: number;
+    size?: string;
+    title?: string;
+    url?: string;
+  };
+
+  type uploadExcelUsingPOSTParams = {
+    /** module */
+    module: string;
   };
 
   type uploadUsingPOSTParams = {

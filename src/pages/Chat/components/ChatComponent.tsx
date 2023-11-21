@@ -7,13 +7,14 @@ import Chat, { Bubble, Icon, Message, useMessages } from '@chatui/core';
 import '@chatui/core/dist/index.css';
 import '@chatui/core/es/styles/index.less';
 import { message } from 'antd';
-import { useEffect } from 'react';
+import hljs from 'highlight.js/lib/core';
+import {useEffect, useRef} from 'react';
 import './chatui-theme.css';
 
 const initialMessages = [
   {
     type: 'text',
-    content: { text: '您好，我是聪明鸭，你的贴心AI小助手~' },
+    content: { text: '我是聪明鸭，您的贴心AI小助手~' },
     user: {
       avatar:
         'https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/avatar/%E6%9C%BA%E5%99%A8%E4%BA%BA.svg',
@@ -34,9 +35,12 @@ function ChatPage() {
   const { initialState, setInitialState } = useModel('@@initialState');
   const { currentUser } = initialState ?? {};
   const { id } = useParams();
+  const scrollContainerRef = useRef(null);
 
   // 发送回调
   async function handleSend(type: string, val: string) {
+    const detectedLanguage = hljs.highlightAuto(val).language;
+
     if (type === 'text' && val.trim()) {
       // TODO: 发送请求
       try {
@@ -56,7 +60,7 @@ function ChatPage() {
           appendMsg({
             type: 'text',
             // @ts-ignore
-            content: { text: res.data.result },
+            content: { text: res.data.result, language: detectedLanguage },
             user: {
               avatar:
                 'https://gulimall-chixiaowai.oss-cn-shenzhen.aliyuncs.com/congmingya/avatar/%E6%9C%BA%E5%99%A8%E4%BA%BA.svg',
@@ -88,15 +92,23 @@ function ChatPage() {
     }
   }
 
+  const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      // @ts-ignore
+      scrollContainerRef.current.scrollTo({
+        // @ts-ignore
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   useEffect(() => {
     const loadMessage = async () => {
       const res = await listLoginUserChatUsingPOST({ assistantId: Number(id) });
-      // console.log('res: ', res.data);
-      // console.log('messages: ', messages);
       if (res.data) {
         let messageList = res.data;
         messageList.map((message) => {
-          console.log('message: ', message);
           message.isUser == '0'
             ? appendMsg({
                 type: 'text',
@@ -120,7 +132,7 @@ function ChatPage() {
   }, []);
 
   return (
-    <div>
+    <div ref={scrollContainerRef} style={{ height: '90vh', overflowY: 'scroll' }}>
       <Chat
         navbar={{ title: '聪明鸭AI助手' }}
         rightAction={<Icon type="bullhorn" />}

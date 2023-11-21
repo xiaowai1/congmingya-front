@@ -176,7 +176,7 @@ const UserList: React.FC = () => {
         message.error('获取用户列表失败');
       }
     } catch (e: any) {
-      message.error('获取用户列表失败，' + e.message);
+      // message.error('获取用户列表失败，' + e.message);
     }
     setLoading(false);
   };

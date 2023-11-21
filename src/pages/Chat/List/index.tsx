@@ -1,7 +1,10 @@
-import { listMyAssistantUsingPOST } from '@/services/congmingya/chatAssistantController';
+import {
+  deleteChatAssistantUsingPOST,
+  listMyAssistantUsingPOST,
+} from '@/services/congmingya/chatAssistantController';
 import { useModel } from '@@/exports';
 import { history } from '@umijs/max';
-import { Avatar, List, message, Space } from 'antd';
+import { Avatar, Button, List, message, Popconfirm, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -29,18 +32,29 @@ const AssistantList: React.FC = () => {
     history.push(`/chat/${id}`);
   };
 
+  //删除聊天助手
+  const handleDelete = async (values: number | undefined) => {
+    const res = await deleteChatAssistantUsingPOST({ id: values });
+    if (res.data) {
+      message.success('删除成功');
+      setSearchParams((old) => {
+        return { ...old };
+      });
+    } else {
+      message.error('删除失败');
+    }
+  };
+
   useEffect(() => {
     async function loadAssistants() {
       try {
         const res = await listMyAssistantUsingPOST(searchParams);
-        console.log('res:', res);
         if (res.code == 0 && res.data) {
           setTotal(res.data.total ?? 0);
           setChatList(res.data.records ?? []);
         }
-        console.log('chatList:', chatList);
       } catch (e: any) {
-        message.error('获取助手列表失败');
+        // message.error('获取助手列表失败');
       }
     }
 
@@ -50,12 +64,26 @@ const AssistantList: React.FC = () => {
   return (
     <>
       <List
+        style={{width: "90%"}}
         dataSource={chatList}
         renderItem={(item, index) => (
           <List.Item
-            onClick={() => {
-              startChat(item.id);
-            }}
+            actions={[
+              <Button
+                type={'primary'}
+                size={'middle'}
+                onClick={() => {
+                  startChat(item.id);
+                }}
+              >
+                继续聊天
+              </Button>,
+              <Popconfirm title="确定要删除该助手吗?" onConfirm={() => handleDelete(item.id)}>
+                <Button danger size={'middle'}>
+                  删除
+                </Button>
+              </Popconfirm>,
+            ]}
           >
             <List.Item.Meta
               avatar={<Avatar src={currentUser && currentUser.userAvatar} />}

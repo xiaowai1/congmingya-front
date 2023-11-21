@@ -9,7 +9,6 @@ import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { errorConfig } from './requestConfig';
 import {getLoginUserVOUsingGET} from "@/services/congmingya/userController";
-import {createContext} from "react";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 

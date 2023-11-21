@@ -1,6 +1,9 @@
-import { listMyChartByPageUsingPOST } from '@/services/congmingya/chartController';
+import {
+  deleteChartUsingPOST,
+  listMyChartByPageUsingPOST,
+} from '@/services/congmingya/chartController';
 import { useModel } from '@@/exports';
-import { Avatar, Card, List, message, Result } from 'antd';
+import { Avatar, Button, Card, List, message, Popconfirm, Result, Select, Space } from 'antd';
 import Search from 'antd/es/input/Search';
 import ReactECharts from 'echarts-for-react';
 import React, { useEffect, useState } from 'react';
@@ -24,26 +27,54 @@ const MyChart: React.FC = () => {
     setLoading(true);
     try {
       const res = await listMyChartByPageUsingPOST(searchParams);
-      if (res.data) {
-        setChartList(res.data.records ?? []);
-        setTotal(res.data.total ?? 0);
-        // 隐藏图表的 title
-        if (res.data.records) {
-          res.data.records.forEach((data) => {
-            if (data.status === 'succeed') {
-              const chartOption = JSON.parse(data.genChart ?? '{}');
-              chartOption.title = undefined;
-              data.genChart = JSON.stringify(chartOption);
-            }
-          });
+      if (res.code == 0) {
+        if (res.data) {
+          setChartList(res.data.records ?? []);
+          setTotal(res.data.total ?? 0);
+          // 隐藏图表的 title
+          if (res.data.records) {
+            res.data.records.forEach((data) => {
+              if (data.status === 'success') {
+                const chartOption = JSON.parse(data.genChart ?? '{}');
+                chartOption.title = undefined;
+                data.genChart = JSON.stringify(chartOption);
+              }
+            });
+          }
         }
       } else {
         message.error('获取我的图表失败');
       }
     } catch (e: any) {
-      message.error('获取我的图表失败，' + e.message);
+      // message.error('获取我的图表失败，' + e.message);
     }
     setLoading(false);
+  };
+
+  //打出图表
+  const exportChart = async (values: number | undefined) => {
+    const res = await deleteChartUsingPOST({ id: values });
+    if (res.data) {
+      message.success('删除成功');
+      setSearchParams((old) => {
+        return { ...old };
+      });
+    } else {
+      message.error('删除失败');
+    }
+  };
+
+  //删除图表
+  const handleDelete = async (values: number | undefined) => {
+    const res = await deleteChartUsingPOST({ id: values });
+    if (res.data) {
+      message.success('删除成功');
+      setSearchParams((old) => {
+        return { ...old };
+      });
+    } else {
+      message.error('删除失败');
+    }
   };
 
   useEffect(() => {
@@ -54,18 +85,37 @@ const MyChart: React.FC = () => {
   return (
     <div className="my-chart">
       <div>
-        <Search
-          placeholder="请输入图表名称"
-          enterButton
-          loading={loading}
-          onSearch={(value) => {
-            // 设置搜索条件
-            setSearchParams({
-              ...initSearchParams,
-              name: value,
-            });
-          }}
-        />
+        <Space>
+          <Select
+            placeholder="请选择图表类型"
+            allowClear={true}
+            onSelect={(value) => {
+              // 设置搜索条件
+              setSearchParams({
+                ...initSearchParams,
+                chartType: value,
+              });
+            }}
+          >
+            <Select.Option value={'折线图'}>折线图</Select.Option>
+            <Select.Option value={'柱状图'}>柱状图</Select.Option>
+            <Select.Option value={'堆叠图'}>堆叠图</Select.Option>
+            <Select.Option value={'饼图'}>饼图</Select.Option>
+            <Select.Option value={'雷达图'}>雷达图</Select.Option>
+          </Select>
+          <Search
+            placeholder="请输入图表名称"
+            enterButton
+            loading={loading}
+            onSearch={(value) => {
+              // 设置搜索条件
+              setSearchParams({
+                ...initSearchParams,
+                name: value,
+              });
+            }}
+          />
+        </Space>
       </div>
       <div className="margin-16" />
       <List
@@ -94,9 +144,20 @@ const MyChart: React.FC = () => {
         dataSource={chartList}
         renderItem={(item) => (
           <List.Item key={item.id}>
-            <Card style={{ width: '100%' }}>
+            <Card
+              style={{ width: '100%' }}
+              actions={[
+                <Popconfirm title="确定要删除该图表吗?" onConfirm={() => handleDelete(item.id)}>
+                  <Button danger size={'middle'}>
+                    删除
+                  </Button>
+                </Popconfirm>,
+              ]}
+            >
               <List.Item.Meta
-                avatar={<Avatar src={<img src={currentUser && currentUser.userAvatar} alt="avatar" />}/>}
+                avatar={
+                  <Avatar src={<img src={currentUser && currentUser.userAvatar} alt="avatar" />} />
+                }
                 title={item.name}
                 description={item.chartType ? '图表类型：' + item.chartType : undefined}
               />
@@ -115,12 +176,13 @@ const MyChart: React.FC = () => {
                     <Result status="info" title="图表生成中" subTitle={item.execMessage} />
                   </>
                 )}
-                {item.status === 'succeed' && (
+                {item.status === 'success' && (
                   <>
                     <div style={{ marginBottom: 16 }} />
                     <p>{'分析目标：' + item.goal}</p>
                     <div style={{ marginBottom: 16 }} />
                     <ReactECharts option={item.genChart && JSON.parse(item.genChart)} />
+                    <p>{'分析结果：' + item.genResult}</p>
                   </>
                 )}
                 {item.status === 'failed' && (

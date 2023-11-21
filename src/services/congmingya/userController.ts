@@ -84,7 +84,7 @@ export async function listUserPageUsingPOST(
 
 /** login POST /api/user/login */
 export async function loginUsingPOST(body: API.UserLoginRequest, options?: { [key: string]: any }) {
-  return request<API.BaseResponseLoginUserVO_>('/api/user/login', {
+  return request<API.BaseResponseString_>('/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
