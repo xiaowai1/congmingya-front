@@ -1,13 +1,13 @@
+import { request } from '@/app';
+import { genChartByAiUsingPOST } from '@/services/congmingya/chartController';
+import { getLoginUserVOUsingGET } from '@/services/congmingya/userController';
+import { useModel } from '@@/exports';
 import { UploadOutlined } from '@ant-design/icons';
-import {Button, Card, Form, Input, message, Select, Space, Upload} from 'antd';
+import { Button, Card, Form, Input, message, Select, Space, Upload } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
-import {genChartByAiUsingPOST} from "@/services/congmingya/chartController";
-import {request} from "@/app";
-import {useModel} from "@@/exports";
-import {flushSync} from "react-dom";
-import {getLoginUserVOUsingGET} from "@/services/congmingya/userController";
+import { flushSync } from 'react-dom';
 
 const AddChart: React.FC = () => {
   const [form] = useForm();
@@ -74,14 +74,34 @@ const AddChart: React.FC = () => {
           <Form.Item
             name="goal"
             label="分析目标"
-            rules={[{ required: true, message: '请输入分析目标' }]}
+            rules={[
+              { required: true, message: '请输入分析目标' },
+              {
+                max: 200,
+                message: '分析目标最多二百字',
+              },
+            ]}
           >
             <TextArea placeholder="请输入你的分析需求，比如：分析网站用户的增长情况" />
           </Form.Item>
-          <Form.Item name="name" label="图表名称">
+          <Form.Item
+            name="name"
+            label="图表名称"
+            rules={[
+              { required: true, message: '请输入图表名称' },
+              {
+                max: 30,
+                message: '名称过长',
+              },
+            ]}
+          >
             <Input placeholder="请输入图表名称" />
           </Form.Item>
-          <Form.Item name="chartType" label="图表类型">
+          <Form.Item
+            name="chartType"
+            label="图表类型"
+            rules={[{ required: true, message: '请选择图表类型' }]}
+          >
             <Select
               options={[
                 { value: '折线图', label: '折线图' },
@@ -92,8 +112,17 @@ const AddChart: React.FC = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item name="file" label="原始数据" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload name="file" maxCount={1} action={request.baseURL + '/api/oss/file/upload/excel?module=file'}>
+          <Form.Item
+            name="file"
+            label="原始数据"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload
+              name="file"
+              maxCount={1}
+              action={request.baseURL + '/api/oss/file/upload/excel?module=file'}
+            >
               <Button icon={<UploadOutlined />}>上传 Excel 文件</Button>
             </Upload>
           </Form.Item>

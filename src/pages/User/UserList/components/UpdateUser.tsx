@@ -107,12 +107,18 @@ export default function UpdateUser({
     }
   }
 
+  // 取消按钮点击事件处理函数
+  function updateCancel() {
+    onCancel && onCancel(); // 调用外部传入的 onCancel 回调函数
+    form.setFieldsValue(user); // 将 user 属性的值传递给表单
+  }
+
   useEffect(() => {
     form.setFieldsValue(user);
   }, [user]);
 
   return (
-    <Modal open={open} title={'修改用户'} onOk={onSubmit} onCancel={onCancel}>
+    <Modal open={open} title={'修改用户'} onOk={onSubmit} onCancel={updateCancel}>
       <Form form={form}>
         <Item name={'userAccount'} label={'用户账号'} rules={userAccountRules}>
           <Input />

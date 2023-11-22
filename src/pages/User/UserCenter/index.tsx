@@ -1,6 +1,7 @@
 import { request } from '@/app';
 import {
-  getLoginUserVOUsingGET, signUsingPOST,
+  getLoginUserVOUsingGET,
+  signUsingPOST,
   updateMyselfUsingPOST,
 } from '@/services/congmingya/userController';
 import { useModel } from '@@/exports';
@@ -10,15 +11,15 @@ import {
   FormRule,
   Input,
   message,
-  Popconfirm, Space,
+  Popconfirm,
+  Space,
   Upload,
   UploadFile,
   UploadProps,
 } from 'antd';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import React, { useEffect, useState } from 'react';
-import {flushSync} from "react-dom";
-import Footer from "@/components/Footer";
+import { flushSync } from 'react-dom';
 
 const UserCenter: React.FC = () => {
   const { Item } = Form;
@@ -33,7 +34,6 @@ const UserCenter: React.FC = () => {
   // @ts-ignore
   const [imageUrl, setImageUrl] = useState<string>();
   const { currentUser } = initialState ?? {};
-
 
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
@@ -71,7 +71,18 @@ const UserCenter: React.FC = () => {
 
   //修改个人信息
   async function handleEdit() {
-    //验证并获取数据
+    //未修改获取表单数据
+    const formValue = form.getFieldsValue();
+    if (
+      // @ts-ignore
+      formValue.userAccount === currentUser.userAccount &&
+      // @ts-ignore
+      formValue.userAvatar === currentUser.userAvatar
+    ) {
+      message.info('信息未修改');
+      return;
+    }
+    //修改后验证并获取数据
     const result = await form.validateFields();
     try {
       const res = await updateMyselfUsingPOST({
@@ -97,7 +108,7 @@ const UserCenter: React.FC = () => {
   }
 
   //签到领鸭币
-  async function handleSign(){
+  async function handleSign() {
     try {
       const res = await signUsingPOST();
       if (res.data) {
@@ -109,28 +120,50 @@ const UserCenter: React.FC = () => {
             currentUser: newLoginUser.data,
           }));
         });
-        message.success("领取成功!")
+        message.success('领取成功!');
       } else {
-        message.error("今天已经领过了")
+        message.error('今天已经领过了');
       }
     } catch (error) {
-      message.error("领取失败")
+      message.error('领取失败');
     }
   }
 
-  const onSuccess = async () => {
+  const onSuccess = async () => {};
 
-  };
+  // 模拟异步获取表单数据
+  async function fetchFormData() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          userAccount: currentUser && currentUser.userAccount,
+          userAvatar: currentUser && currentUser.userAvatar,
+          integral: currentUser && currentUser.integral,
+          accessKey: currentUser && currentUser.accessKey,
+          secretKey: currentUser && currentUser.secretKey,
+          // 其他字段的初始值
+        });
+      }, 1000);
+    });
+  }
 
   useEffect(() => {
-
-  }, [initialState]);
+    // 模拟异步获取表单数据
+    fetchFormData().then((data) => {
+      form.setFieldsValue(data); // 填充表单数据
+    });
+  }, [form]);
 
   return (
     <div>
       <Form form={form}>
-        <Item name={'userAccount'} label={'用户账号'}>
-          <Input style={{ width: '20%' }} defaultValue={currentUser && currentUser.userAccount} />
+        <Item
+          name={'userAccount'}
+          label={'用户账号'}
+          initialValue={currentUser && currentUser.userAccount}
+          rules={userAccountRules}
+        >
+          <Input style={{ width: '20%' }} />
         </Item>
 
         <Item name={'userAvatar'} label={'用户头像'}>

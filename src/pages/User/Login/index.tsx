@@ -175,9 +175,9 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
+            {/*<ProFormCheckbox noStyle name="autoLogin">*/}
+            {/*  自动登录*/}
+            {/*</ProFormCheckbox>*/}
             <a
               style={{
                 float: 'right',

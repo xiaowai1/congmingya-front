@@ -127,20 +127,13 @@ const Welcome: React.FC = () => {
     } catch (e: any) {
       message.error('系统错误');
     }
-    // const chatId = res.data;
-    // history.push('/chat/' + chatId);
   };
 
-  const onClick = async () => {
+  const goBi = async () => {
     history.push('/chart/add_chart');
   };
 
-  const onClick1 = async () => {
-    const res = await getLatestAssistantUsingGET();
-    history.push(`/chat/${res.data}`);
-  };
-
-  const onClick2 = async () => {
+  const goPicture = async () => {
     history.push('/picture/add_picture');
   };
 
@@ -224,7 +217,7 @@ const Welcome: React.FC = () => {
                   }}>
                     多功能的AI语言助手，旨在为用户提供各种语言相关的支持和服务。
                   </Typography.Title>
-                  <Button type="primary" onClick={onClick1} target="_blank">
+                  <Button type="primary" onClick={startChat} target="_blank">
                     去使用
                   </Button>
                 </Flex>
@@ -248,7 +241,7 @@ const Welcome: React.FC = () => {
                   } : false}>
                     导入数据，输入想要的分析目标，就能利用AI生成符合要求的图表以及分析结论。
                   </Typography.Title>
-                  <Button type="primary" onClick={onClick} target="_blank">
+                  <Button type="primary" onClick={goBi} target="_blank">
                     去使用
                   </Button>
                 </Flex>
@@ -272,7 +265,7 @@ const Welcome: React.FC = () => {
                   }}>
                     输入想要生成的画面内容，帮您快速生成指定大小的图片。
                   </Typography.Title>
-                  <Button type="primary" onClick={onClick2} target="_blank">
+                  <Button type="primary" onClick={goPicture} target="_blank">
                     去使用
                   </Button>
                 </Flex>

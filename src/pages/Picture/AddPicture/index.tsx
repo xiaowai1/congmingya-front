@@ -1,3 +1,4 @@
+import { genPictureUsingPOST } from '@/services/congmingya/pictureController';
 import { getLoginUserVOUsingGET } from '@/services/congmingya/userController';
 import { useModel } from '@@/exports';
 import { Button, Card, Form, Input, message, Select, Space } from 'antd';
@@ -5,7 +6,6 @@ import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import {genPictureUsingPOST} from "@/services/congmingya/pictureController";
 
 const AddPicture: React.FC = () => {
   const [form] = useForm();
@@ -70,14 +70,26 @@ const AddPicture: React.FC = () => {
           <Form.Item
             name="title"
             label="图片标题"
-            rules={[{ required: true, message: '请输入图片标题' }]}
+            rules={[
+              { required: true, message: '请输入图片标题' },
+              {
+                max: 20,
+                message: '标题过长',
+              },
+            ]}
           >
             <TextArea placeholder="请为要生成的图片拟一个标题" />
           </Form.Item>
           <Form.Item
             name="description"
             label="图片描述"
-            rules={[{ required: true, message: '请输入想要生成的画面内容' }]}
+            rules={[
+              { required: true, message: '请输入想要生成的画面内容' },
+              {
+                max: 80,
+                message: '描述过长',
+              },
+            ]}
           >
             <Input placeholder="请输入想要生成的画面内容" />
           </Form.Item>

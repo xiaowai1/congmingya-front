@@ -1,20 +1,10 @@
 import { request } from '@/app';
-import {addUserUsingPOST, updateUserUsingPOST} from '@/services/congmingya/userController';
+import { addUserUsingPOST } from '@/services/congmingya/userController';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-  Form,
-  FormRule,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Upload,
-  UploadFile,
-  UploadProps,
-} from 'antd';
+import { Form, FormRule, Input, message, Modal, Upload, UploadFile, UploadProps } from 'antd';
 import { Group } from 'antd/es/radio';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function AddUser({
   open,
@@ -90,7 +80,7 @@ export default function AddUser({
     //验证并获取数据
     const result = await form.validateFields();
     try {
-      console.log("imageUrl:", result)
+      console.log('imageUrl:', result);
       const res = await addUserUsingPOST({
         ...result,
         id: user.id,
@@ -108,12 +98,14 @@ export default function AddUser({
     }
   }
 
-  // useEffect(() => {
-  //   form.setFieldsValue(user);
-  // }, [user]);
+  // 取消按钮点击事件处理函数
+  function addCancel() {
+    onCancel && onCancel(); // 调用外部传入的 onCancel 回调函数
+    form.resetFields(); // 重置表单字段的值
+  }
 
   return (
-    <Modal open={open} title={'新增用户'} onOk={onSubmit} onCancel={onCancel}>
+    <Modal open={open} title={'新增用户'} onOk={onSubmit} onCancel={addCancel}>
       <Form form={form} initialValues={user}>
         <Item name={'userAccount'} label={'用户账号'} rules={userAccountRules}>
           <Input />

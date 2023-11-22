@@ -52,8 +52,8 @@ const UserList: React.FC = () => {
 
   //点击修改事件
   function updateClick(user: API.UserVO) {
-    setUpdateButton(true);
     setUpdateForm(user);
+    setUpdateButton(true);
   }
 
   //提交修改表单成功回调函数
