@@ -117,6 +117,7 @@ const AddChart: React.FC = () => {
             label="原始数据"
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            rules={[{ required: true, message: '请上传Excel文件' }]}
           >
             <Upload
               name="file"
